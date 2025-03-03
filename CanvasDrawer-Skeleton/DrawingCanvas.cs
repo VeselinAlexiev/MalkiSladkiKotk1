@@ -53,19 +53,35 @@
 
         public void SetPixel(int row, int col, CanvasColor color)
         {
-            throw new NotImplementedException();
+            if (row < 0 || row >= Height || col < 0 || col >= Width)
+                throw new ArgumentOutOfRangeException(nameof(row), "Pixel coordinates are out of bounds.");
+
+            int byteIndex = col / 8;
+            int bitIndex = 7 - (col % 8);
+            byte mask = (byte)(1 << bitIndex);
+
+            if (color == CanvasColor.White)
+                pixels[row][byteIndex] |= mask; 
+            else
+                pixels[row][byteIndex] ^= mask;
         }
 
         public void DrawHorizontalLine(int row, int startCol, int endCol, 
             CanvasColor color)
         {
-            throw new NotImplementedException();
+            for (int col = startCol; col <= endCol; col++)
+            {
+                SetPixel(row, col, color);
+            }
         }
 
         public void DrawVerticalLine(int col, int startRow, int endRow, 
             CanvasColor color)
         {
-            throw new NotImplementedException();
+            for (int row = startRow; row <= endRow; row++)
+            {
+                SetPixel(row, col, color);
+            }
         }
 
         public void DrawRectangle(int startRow, int startCol, int endRow, int endCol, 
