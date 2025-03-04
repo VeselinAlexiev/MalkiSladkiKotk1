@@ -87,7 +87,17 @@
         public void DrawRectangle(int startRow, int startCol, int endRow, int endCol, 
             CanvasColor color)
         {
-            throw new NotImplementedException();
+            for (int col = startCol; col <= endCol; col++)
+            {
+                SetPixel(startRow, col, color);
+                SetPixel(endRow, col, color);
+            }
+
+            for (int row = startRow; row <= endRow; row++)
+            {
+                SetPixel(row, startCol, color);
+                SetPixel(row, endCol, color);
+            }
         }
 
         private void CheckBounds(int height, int width)
