@@ -16,7 +16,7 @@
                 throw new ArgumentException("Invalid height! Height should be in range [32 ... 1024].");
             }
 
-            // Allocate the pixels in the image
+        
             int widthInts = width / 32;
             this.pixels = new uint[height][];
             for (int row = 0; row < height; row++)
@@ -24,8 +24,8 @@
                 this.pixels[row] = new uint[widthInts];
             }
 
-            // Uncomment when implemented
-            //this.FillAllPixels(CanvasColor.White);
+           
+            this.FillAllPixels(CanvasColor.White);
         }
 
         public int Width => this.pixels[0].Length * 32;
@@ -38,12 +38,26 @@
 
         public void FillAllPixels(CanvasColor color)
         {
-            throw new NotImplementedException();
+            int mask = isWhite ? ~0 : 0; 
+
+            for (int row = 0; row < height; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    pixels[row, col] = mask;
+                }
+            }
         }
 
         public void InvertAllPixels()
         {
-            throw new NotImplementedException();
+            for (int row = 0; row < height; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    pixels[row, col] = ~pixels[row, col]; 
+                }
+            }
         }
 
         public CanvasColor GetPixel(int row, int col)

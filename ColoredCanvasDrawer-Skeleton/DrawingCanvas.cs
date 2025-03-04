@@ -62,7 +62,15 @@
 
         public void SetPixel(int row, int col, Color color)
         {
-            throw new NotImplementedException();
+            if (row < 0 || row >= height || col < 0 || col >= width)
+            {
+                throw new ArgumentOutOfRangeException("Pixel coordinates are out of bounds.");
+            }
+
+            int offset = (row * width + col) * 3; 
+            pixels[offset] = color.R;     
+            pixels[offset + 1] = color.G; 
+            pixels[offset + 2] = color.B;
         }
 
         public void DrawHorizontalLine(int row, int startCol, int endCol, Color color)
