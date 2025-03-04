@@ -38,27 +38,29 @@
 
         public void FillAllPixels(CanvasColor color)
         {
-            int mask = isWhite ? ~0 : 0; 
+            
+            uint mask = (color == CanvasColor.White) ? 0xFFFFFFFF : 0x00000000;
 
-            for (int row = 0; row < height; row++)
+            for (int row = 0; row < this.Height; row++)
             {
-                for (int col = 0; col < width; col++)
+                for (int col = 0; col < this.ColCount; col++)
                 {
-                    pixels[row, col] = mask;
+                    pixels[row][col] = mask;
                 }
             }
         }
 
         public void InvertAllPixels()
         {
-            for (int row = 0; row < height; row++)
+            for (int row = 0; row < this.Height; row++)
             {
-                for (int col = 0; col < width; col++)
+                for (int col = 0; col < this.ColCount; col++)
                 {
-                    pixels[row, col] = ~pixels[row, col]; 
+                    pixels[row][col] = ~pixels[row][col]; 
                 }
             }
         }
+
 
         public CanvasColor GetPixel(int row, int col)
         {
