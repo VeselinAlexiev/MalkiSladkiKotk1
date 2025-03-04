@@ -62,7 +62,15 @@
 
         public CanvasColor GetPixel(int row, int col)
         {
-            throw new NotImplementedException();
+            CheckBounds(row, col);
+
+            uint[] targetRow = pixels[row];
+            int targetCol = col / 32;
+            uint targetInt = targetRow[targetCol];
+            int bitIndex = col % 32;
+            int bit = (int)((targetInt >> bitIndex) & 1);
+
+            return (CanvasColor)bit;
         }
 
         public void SetPixel(int row, int col, CanvasColor color)

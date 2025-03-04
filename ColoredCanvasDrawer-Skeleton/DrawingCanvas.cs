@@ -57,7 +57,13 @@
 
         public Color GetPixel(int row, int col)
         {
-            throw new NotImplementedException();
+            if (row < 0 || row >= height || col < 0 || col >= width)
+            {
+                throw new ArgumentOutOfRangeException("Pixel coordinates are out of bounds.");
+            }
+
+            int offset = (row * width + col) * 3;
+            return Color.FromArgb(pixels[offset], pixels[offset + 1], pixels[offset + 2]);
         }
 
         public void SetPixel(int row, int col, Color color)
