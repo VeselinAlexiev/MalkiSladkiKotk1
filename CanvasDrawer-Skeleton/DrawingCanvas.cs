@@ -123,6 +123,29 @@
                 SetPixel(row, endCol, color);
             }
         }
+        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CanvasColor color)
+        {
+            int[] x = { x1, x2, x3, x1 };
+            int[] y = { y1, y2, y3, y1 };
+
+            for (int i = 0; i < 3; i++)
+            {
+                int dx = Math.Abs(x[i + 1] - x[i]);
+                int dy = Math.Abs(y[i + 1] - y[i]);
+                int sx = x[i] < x[i + 1] ? 1 : -1;
+                int sy = y[i] < y[i + 1] ? 1 : -1;
+                int err = dx - dy;
+
+                while (true)
+                {
+                    SetPixel(y[i], x[i], color);
+                    if (x[i] == x[i + 1] && y[i] == y[i + 1]) break;
+                    int e2 = 2 * err;
+                    if (e2 > -dy) { err -= dy; x[i] += sx; }
+                    if (e2 < dx) { err += dx; y[i] += sy; }
+                }
+            }
+        }
 
         private void CheckBounds(int height, int width)
         {
