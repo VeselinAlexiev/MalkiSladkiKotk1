@@ -6,5 +6,6 @@
         HorizontalLine,
         VerticalLine,
         Rectangle,
+        Triangle
     }
 }

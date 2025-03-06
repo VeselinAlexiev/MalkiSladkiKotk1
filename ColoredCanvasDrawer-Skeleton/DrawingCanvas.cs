@@ -57,13 +57,27 @@
 
         public Color GetPixel(int row, int col)
         {
-            throw new NotImplementedException();
+            if (row < 0 || row >= this.Height || col < 0 || col >= this.Width)
+            {
+                throw new ArgumentOutOfRangeException("Pixel coordinates are out of bounds.");
+            }
+
+            int offset = col * 3;
+            return Color.FromArgb(pixels[row][offset], pixels[row][offset + 1], pixels[row][offset + 2]);
         }
 
         public void SetPixel(int row, int col, Color color)
-        {
-            throw new NotImplementedException();
+        {        
+            if (row < 0 || row >= this.Height || col < 0 || col >= this.Width)
+            {
+                throw new ArgumentOutOfRangeException("Pixel coordinates are out of bounds.");
+            }     
+            int offset = col * 3;        
+            this.pixels[row][offset] = color.R;     
+            this.pixels[row][offset + 1] = color.G;   
+            this.pixels[row][offset + 2] = color.B;   
         }
+
 
         public void DrawHorizontalLine(int row, int startCol, int endCol, Color color)
         {

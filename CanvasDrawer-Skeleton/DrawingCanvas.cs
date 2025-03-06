@@ -16,7 +16,7 @@
                 throw new ArgumentException("Invalid height! Height should be in range [32 ... 1024].");
             }
 
-            // Allocate the pixels in the image
+        
             int widthInts = width / 32;
             this.pixels = new uint[height][];
             for (int row = 0; row < height; row++)
@@ -24,8 +24,8 @@
                 this.pixels[row] = new uint[widthInts];
             }
 
-            // Uncomment when implemented
-            //this.FillAllPixels(CanvasColor.White);
+           
+            this.FillAllPixels(CanvasColor.White);
         }
 
         public int Width => this.pixels[0].Length * 32;
@@ -38,17 +38,41 @@
 
         public void FillAllPixels(CanvasColor color)
         {
-            throw new NotImplementedException();
+            
+            uint mask = (color == CanvasColor.White) ? 0xFFFFFFFF : 0x00000000;
+
+            for (int row = 0; row < this.Height; row++)
+            {
+                for (int col = 0; col < this.ColCount; col++)
+                {
+                    pixels[row][col] = mask;
+                }
+            }
         }
 
         public void InvertAllPixels()
         {
-            throw new NotImplementedException();
+            for (int row = 0; row < this.Height; row++)
+            {
+                for (int col = 0; col < this.ColCount; col++)
+                {
+                    pixels[row][col] = ~pixels[row][col]; 
+                }
+            }
         }
+
 
         public CanvasColor GetPixel(int row, int col)
         {
-            throw new NotImplementedException();
+            CheckBounds(row, col);
+
+            uint[] targetRow = pixels[row];
+            int targetCol = col / 32;
+            uint targetInt = targetRow[targetCol];
+            int bitIndex = col % 32;
+            int bit = (int)((targetInt >> bitIndex) & 1);
+
+            return (CanvasColor)bit;
         }
 
         public void SetPixel(int row, int col, CanvasColor color)
@@ -97,6 +121,29 @@
             {
                 SetPixel(row, startCol, color);
                 SetPixel(row, endCol, color);
+            }
+        }
+        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CanvasColor color)
+        {
+            int[] x = { x1, x2, x3, x1 };
+            int[] y = { y1, y2, y3, y1 };
+
+            for (int i = 0; i < 3; i++)
+            {
+                int dx = Math.Abs(x[i + 1] - x[i]);
+                int dy = Math.Abs(y[i + 1] - y[i]);
+                int sx = x[i] < x[i + 1] ? 1 : -1;
+                int sy = y[i] < y[i + 1] ? 1 : -1;
+                int err = dx - dy;
+
+                while (true)
+                {
+                    SetPixel(y[i], x[i], color);
+                    if (x[i] == x[i + 1] && y[i] == y[i + 1]) break;
+                    int e2 = 2 * err;
+                    if (e2 > -dy) { err -= dy; x[i] += sx; }
+                    if (e2 < dx) { err += dx; y[i] += sy; }
+                }
             }
         }
 
