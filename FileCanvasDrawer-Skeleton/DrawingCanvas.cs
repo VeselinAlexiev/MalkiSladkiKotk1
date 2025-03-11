@@ -142,9 +142,38 @@
             throw new NotImplementedException();
         }
 
-        public DrawingCanvas LoadCanvasFromFile(string path)
+        public class DrawingCanvas
         {
-            throw new NotImplementedException();
+            public int Width { get; }
+            public int Height { get; }
+            public byte[][] Pixels { get; }
+
+            public DrawingCanvas(int width, int height, byte[][] pixels)
+            {
+                Width = width;
+                Height = height;
+                Pixels = pixels;
+            }
+
+            public static DrawingCanvas LoadCanvasFromFile(string path)
+            {
+                byte[] canvasBytes = File.ReadAllBytes(path);
+                int heightBytes = BitConverter.ToInt32(canvasBytes, 0);
+                int widthBytes = BitConverter.ToInt32(canvasBytes, 4);
+
+                int i = 8;
+                byte[][] canvas = new byte[heightBytes][];
+                for (int row = 0; row < heightBytes; row++)
+                {
+                    canvas[row] = new byte[widthBytes];
+                    for (int col = 0; col < widthBytes; col++)
+                    {
+                        canvas[row][col] = canvasBytes[i++];
+                    }
+                }
+
+                return new DrawingCanvas(widthBytes, heightBytes, canvas);
+            }
         }
 
         private void PlotLineLow(int startCol, int startRow, int endCol, 
