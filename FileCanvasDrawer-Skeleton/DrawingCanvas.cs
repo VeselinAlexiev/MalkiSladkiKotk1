@@ -95,28 +95,28 @@
             }
         }
 
-        public void DrawDiagonalLine(int startCol, int startRow, int endCol, int endRow, Color color)
+        public void DrawDiagonalLine(int x0, int y0, int x1, int y1, Color color)
         {
-            if (Math.Abs(endRow - startRow) < Math.Abs(endCol - startCol))
+            if (Math.Abs(y1 - y0) < Math.Abs(x1 - x0))
             {
-                if (startCol > endCol)
+                if (x0 > x1)
                 {
-                    this.PlotLineLow(endCol, endRow, startCol, startRow, color);
+                    this.PlotLineLow(x1, y1, x0, y0, color);
                 }
                 else
                 {
-                    this.PlotLineLow(startCol, startRow, endCol, endRow, color);
+                    this.PlotLineLow(x0, y0, x1, y1, color);
                 }
             }
             else
             {
-                if (startRow > endRow)
+                if (y0 > y1)
                 {
-                    this.PlotLineHigh(endCol, endRow, startCol, startRow, color);
+                    this.PlotLineHigh(x1, y1, x0, y0, color);
                 }
                 else
                 {
-                    this.PlotLineHigh(startCol, startRow, endCol, endRow, color);
+                    this.PlotLineHigh(x0, y0, x1, y1, color);
                 }
             }
         }
