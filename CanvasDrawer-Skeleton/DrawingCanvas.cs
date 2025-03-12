@@ -123,26 +123,99 @@
                 SetPixel(row, endCol, color);
             }
         }
-        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CanvasColor color)
+        public void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, CanvasColor color)
         {
-            int[] x = { x1, x2, x3, x1 };
-            int[] y = { y1, y2, y3, y1 };
+            if (y0 == y1)
+                DrawHorizontalLine(y0, Math.Min(x0, x1), Math.Max(x0, x1), color);
+            else if (x0 == x1)
+                DrawVerticalLine(x0, Math.Min(y0, y1), Math.Max(y0, y1), color);
 
-            for (int i = 0; i < 3; i++)
+            if (y1 == y2)
+                DrawHorizontalLine(y1, Math.Min(x1, x2), Math.Max(x1, x2), color);
+            else if (x1 == x2)
+                DrawVerticalLine(x1, Math.Min(y1, y2), Math.Max(y1, y2), color);
+
+            if (y2 == y0)
+                DrawHorizontalLine(y2, Math.Min(x2, x0), Math.Max(x2, x0), color);
+            else if (x2 == x0)
+                DrawVerticalLine(x2, Math.Min(y2, y0), Math.Max(y2, y0), color);
+
+            DrawDiagonalLine(x0, y0, x2, y2);
+        }
+
+        void DrawDiagonalLine(int x0, int y0, int x1, int y1)
+        {
+            if (Math.Abs(y1 - y0) < Math.Abs(x1 - x0))
             {
-                int dx = Math.Abs(x[i + 1] - x[i]);
-                int dy = Math.Abs(y[i + 1] - y[i]);
-                int sx = x[i] < x[i + 1] ? 1 : -1;
-                int sy = y[i] < y[i + 1] ? 1 : -1;
-                int err = dx - dy;
+                if (x0 > x1)
+                    PlotLineLow(x1, y1, x0, y0);
+                else
+                    PlotLineLow(x0, y0, x1, y1);
+            }
+            else
+            {
+                if (y0 > y1)
+                    PlotLineHigh(x1, y1, x0, y0);
+                else
+                    PlotLineHigh(x0, y0, x1, y1);
+            }
+        }
 
-                while (true)
+        void PlotLineLow(int x0, int y0, int x1, int y1)
+        {
+            int dx = x1 - x0;
+            int dy = y1 - y0;
+            int yi = 1;
+
+            if (dy < 0)
+            {
+                yi = -1;
+                dy = -dy;
+            }
+
+            int D = (2 * dy) - dx;
+            int y = y0;
+
+            for (int x = x0; x <= x1; x++)
+            {
+                if (D > 0)
                 {
-                    SetPixel(y[i], x[i], color);
-                    if (x[i] == x[i + 1] && y[i] == y[i + 1]) break;
-                    int e2 = 2 * err;
-                    if (e2 > -dy) { err -= dy; x[i] += sx; }
-                    if (e2 < dx) { err += dx; y[i] += sy; }
+                    y += yi;
+                    D += 2 * (dy - dx);
+                }
+                else
+                {
+                    D += 2 * dy;
+                }
+            }
+        }
+
+        void PlotLineHigh(int x0, int y0, int x1, int y1)
+        {
+            int dx = x1 - x0;
+            int dy = y1 - y0;
+            int xi = 1;
+
+            if (dx < 0)
+            {
+                xi = -1;
+                dx = -dx;
+            }
+
+            int D = (2 * dx) - dy;
+            int x = x0;
+
+            for (int y = y0; y <= y1; y++)
+            {
+        
+                if (D > 0)
+                {
+                    x += xi;
+                    D += 2 * (dx - dy);
+                }
+                else
+                {
+                    D += 2 * dx;
                 }
             }
         }
