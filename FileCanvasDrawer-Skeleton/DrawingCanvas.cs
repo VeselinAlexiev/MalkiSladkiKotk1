@@ -139,8 +139,27 @@
 
         public void SaveCanvasToFile(string path)
         {
-            throw new NotImplementedException();
+          
+            byte[] heightBytes = BitConverter.GetBytes(this.Height);
+            byte[] widthBytes = BitConverter.GetBytes(this.Width);
+
+            byte[] fileData = new byte[8 + (this.Height * this.Width)];
+
+            Array.Copy(heightBytes, 0, fileData, 0, 4);
+            Array.Copy(widthBytes, 0, fileData, 4, 4);
+
+            int index = 8;
+            for (int row = 0; row < this.Height; row++)
+            {
+                for (int col = 0; col < this.Width; col++)
+                {
+                    fileData[index++] = this.pixels[row][col];
+                }
+            }
+
+            File.WriteAllBytes(path, fileData);
         }
+
 
         public class DrawingCanvas
         {
